@@ -1,26 +1,40 @@
 import pygame
 import random
+import os
 pygame.init()
 
 
-win_w, win_h = 800, 600
+WIDTH, HEIGHT = 800, 600
 
 
 WHITE = (255, 255, 255)
 
 
-window = pygame.display.set_mode((win_w, win_h))
+window = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Мем Вьюер")
-background = pygame.image.load("background.jpg")
-background = pygame.transform.scale(background, (win_w, win_h))
-window.blit(background, (0, 0))
+
 
 categories = ["Категорія 1", "Категорія 2", "Категорія 3"]
-images = {
-    "Категорія 1": [pygame.image.load("meme1.jpg"), pygame.image.load("meme2.jpg"), pygame.image.load("meme3.jpg")],
-    "Категорія 2": [pygame.image.load("meme4.jpg"), pygame.image.load("meme5.jpg"), pygame.image.load("meme6.jpg")],
-    "Категорія 3": [pygame.image.load("meme7.jpg"), pygame.image.load("meme8.jpg"), pygame.image.load("meme9.jpg")]
-}
+
+
+image_folder = "images"
+
+
+if not os.path.exists(image_folder):
+    os.makedirs(image_folder)
+
+
+for category in categories:
+    category_folder = os.path.join(image_folder, category.lower())
+    if not os.path.exists(category_folder):
+        os.makedirs(category_folder)
+
+
+images = {}
+for category in categories:
+    category_folder = os.path.join(image_folder, category.lower())
+    category_images = [pygame.image.load(os.path.join(category_folder, filename)) for filename in os.listdir(category_folder) if (filename.endswith(".jpg") or filename.endswith(".png")) and os.path.isfile(os.path.join(category_folder, filename))]
+    images[category] = category_images
 
 selected_image = None
 
@@ -29,7 +43,7 @@ def show_random_mem(selected_category):
     if selected_category in images:
         selected_image = random.choice(images[selected_category])
 
-
+# Функція для відображення кнопок
 def draw_buttons():
     button_y = 50
     for category in categories:
@@ -40,14 +54,14 @@ def draw_buttons():
         window.blit(text, (button_rect.x + 10, button_rect.y + 5))
         button_y += 40
 
-
+# Головний цикл програми
 game = True
 while game:
     window.fill(WHITE)
 
     draw_buttons()
 
-
+    # Обробка подій
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             game = False
@@ -60,9 +74,10 @@ while game:
                         show_random_mem(category)
                     button_y += 40
 
-
+    # Відображення вибраного зображення
     if selected_image:
-        window.blit(selected_image, (350, 200))
-    pygame.display.flip()
+        window.blit(selected_image, ((WIDTH - selected_image.get_width()) // 2, (HEIGHT - selected_image.get_height()) // 2))
+
+    pygame.display.update()  # Оновлення екрану
 
 pygame.quit()
