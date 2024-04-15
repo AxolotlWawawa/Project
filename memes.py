@@ -5,31 +5,25 @@ pygame.init()
 
 
 WIDTH, HEIGHT = 800, 600
-
-
 WHITE = (255, 255, 255)
-
-
-window = pygame.display.set_mode((WIDTH, HEIGHT))
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Мем Вьюер")
-
-
 categories = ["Категорія 1", "Категорія 2", "Категорія 3"]
 
-
+# Папка для зображень
 image_folder = "images"
 
-
+# Створення папки для зображень
 if not os.path.exists(image_folder):
     os.makedirs(image_folder)
 
-
+# Створення підпапок для категорій
 for category in categories:
     category_folder = os.path.join(image_folder, category.lower())
     if not os.path.exists(category_folder):
         os.makedirs(category_folder)
 
-
+# Завантаження зображень з папки
 images = {}
 for category in categories:
     category_folder = os.path.join(image_folder, category.lower())
@@ -48,23 +42,23 @@ def draw_buttons():
     button_y = 50
     for category in categories:
         button_rect = pygame.Rect(50, button_y, 200, 30)
-        pygame.draw.rect(window, (0, 0, 255), button_rect)
+        pygame.draw.rect(screen, (0, 0, 255), button_rect)
         font = pygame.font.Font(None, 24)
         text = font.render(category, True, WHITE)
-        window.blit(text, (button_rect.x + 10, button_rect.y + 5))
+        screen.blit(text, (button_rect.x + 10, button_rect.y + 5))
         button_y += 40
 
 # Головний цикл програми
-game = True
-while game:
-    window.fill(WHITE)
+running = True
+while running:
+    screen.fill(WHITE)
 
     draw_buttons()
 
     # Обробка подій
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            game = False
+            running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -76,8 +70,8 @@ while game:
 
     # Відображення вибраного зображення
     if selected_image:
-        window.blit(selected_image, ((WIDTH - selected_image.get_width()) // 2, (HEIGHT - selected_image.get_height()) // 2))
+        screen.blit(selected_image, ((WIDTH - selected_image.get_width()) // 2, (HEIGHT - selected_image.get_height()) // 2))
 
-    pygame.display.update()  # Оновлення екрану
+    pygame.display.flip()  # Оновлення екрану
 
 pygame.quit()
