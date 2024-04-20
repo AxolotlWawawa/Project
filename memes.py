@@ -64,7 +64,7 @@ def draw_buttons():
     button_y = 50
     for category in categories:
         button_rect = pygame.Rect((WIDTH - 200) // 2, button_y, 200, 30)
-        pygame.draw.rect(screen, (255, 0, 0), button_rect)  # Червоний колір тла кнопки
+        pygame.draw.rect(screen, (200, 55, 55), button_rect)  # Червоний колір тла кнопки
         font = pygame.font.Font(None, 24)
         text = font.render(category, True, (0, 0, 0))  # Чорний колір тексту
         text_rect = text.get_rect(center=button_rect.center)
